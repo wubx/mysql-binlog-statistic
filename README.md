@@ -13,6 +13,7 @@ perl
 
 
 #how-to use
+##format
 cd bin
 chmod +x pasrebinlog
 ./parsebinlog /u1/mysql/logs/mysql-bin.000345
