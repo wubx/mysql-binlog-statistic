@@ -13,12 +13,14 @@ perl
 
 
 #how-to use
-##format
 cd bin
 chmod +x pasrebinlog
 ./parsebinlog /u1/mysql/logs/mysql-bin.000345
+
+#format
 output like :
 ...
+----   -----
 Table XX_db.XXinfo:
 Type INSERT opt：  6 
 Type UPDATE opt：  601 
