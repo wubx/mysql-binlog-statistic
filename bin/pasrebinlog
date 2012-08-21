@@ -1,0 +1,93 @@
+#!/usr/bin/perl 
+
+use strict;
+#use warnings;
+
+my %table;
+my ($t, ,$ff, $tb);
+my ($u, $data, $flag);
+my $resulte;
+if ($ARGV[0] eq "") {
+	print " ARGV not null\n";
+	exit 1;
+}
+
+print "File $ARGV[0]\n";
+my $binlog = "/usr/local/mysql/bin/mysqlbinlog  --no-defaults --base64-output=decode-rows -v ";
+open(FH, "-|", "$binlog $ARGV[0]");
+while(<FH>)
+{
+	if(/^###/){
+		s/^###//;
+		if (/UPDATE/){
+			($t,$tb) = split(" ", $_);
+			chomp($tb);
+			$t =~ s/^\s//;
+			$tb =~ s/^\s//;
+			$table{$tb}{$t}++;  
+			$u = 1;
+		}elsif (/DELETE/){
+			($t, $ff, $tb) = split(" ", $_);
+			chomp($tb);
+			$t =~ s/^\s//;
+			$tb =~ s/^\s//;
+			$table{$tb}{$t}++;	
+			$u = 0;
+		}elsif(/INSERT/){
+			($t,$ff, $tb) = split(" ", $_);
+			chomp($tb);
+			$t =~ s/^\s//;
+			$tb =~ s/^\s//;
+			$table{$tb}{$t}++;
+			$u = 0;
+		}
+
+#  Start update   
+		if( $u ){        
+			if (/WHERE/){
+				$flag = 100;
+			}
+
+			$flag = 200 if (/SET/);
+
+			unless(/SET|WHERE|UPDATE/){
+				my ($key , $value) = split("=", $_);
+				chomp($value);
+				my($t,$k) = split("@", $key);
+				if($flag == 100){
+					$k += $flag;
+					$data->{$k} = $value;
+				}
+
+				if($flag == 200){
+					my $k1 = $k +100;
+					if("a$value" ne "a$data->{$k1}"){
+						$table{$tb}{$k}++;
+					}else{
+					}
+
+				} 
+
+			}
+		} 
+#END UPDATE #
+	}
+}
+
+foreach my $key ( sort keys(%table) ){
+	print "====================================\n";
+	print "Table $key:\n";
+#    $reslute .="$key,";
+	foreach my $fid ( sort keys %{ $table{$key} } ){
+		if( $fid =~ /^\d+$/ ){
+#print "$fid col ：  $table{$key}{$fid} \n";
+			$resulte .= "$fid col :  $table{$key}{$fid} \n";
+		}
+		else{
+			print "Type $fid opt：  $table{$key}{$fid} \n";
+		}   
+	}
+	print "$resulte";
+	$resulte = "";
+	print "================================\n";	
+}
