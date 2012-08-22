@@ -89,5 +89,5 @@ foreach my $key ( sort keys(%table) ){
 	}
 	print "$resulte";
 	$resulte = "";
-	print "================================\n";	
+	print "====================================\n";	
 }
