@@ -65,3 +65,7 @@ Type UPDATE opt：  601
 ================================
 
 #
+mysqlbinlog 
+================================
+支持flashback功能
+./mysqlbinlog -B |mysql
