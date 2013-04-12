@@ -66,7 +66,8 @@ Type UPDATE opt：  601
 cutlogbytime
 #用于从慢日志用截取一个时间段的日志方便分析
 ./cutlogbytime /path/slowlogfile  starttime endtime
-#时间需要写时戳
+时间需要写时戳
+=================================
 mysql> select unix_timestamp('2013-04-05');
 +------------------------------+
 | unix_timestamp('2013-04-05') |
@@ -82,10 +83,9 @@ mysql> select unix_timestamp('2013-04-06');
 |                   1365177600 | 
 +------------------------------+
 1 row in set (0.00 sec)
- 
+================================
 ./cutlogbytime /path/slowlogfile 1365091200 1365177600 > 20130405_slow.log 
 
-================================
 #
 mysqlbinlog 
 ================================
