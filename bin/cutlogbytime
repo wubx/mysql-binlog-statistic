@@ -1,0 +1,48 @@
+#!/usr/bin/perl
+#wubingxi@gmail.com  at feixin.10086.cn
+
+use warnings;
+use strict;
+
+if (@ARGV<2){
+	print "Please use: $0 slow_log start end\n";
+	exit(1);
+}
+my $flag = 0;
+
+my $file=$ARGV[0];
+my $start = $ARGV[1];
+my $end = 0;
+if ( $ARGV[2] ){
+ $end = $ARGV[2];
+
+}
+
+
+#print "$file $start $end\n";
+
+open(FH, "<$file");
+while(<FH>){
+#	print $_;
+	if ( /timestamp\=(\d+)/g ){
+			if ($1 >= $start){
+				if ( $end > 0 && $1 <= $end){
+				$flag = 1;
+				goto LEVEL; 
+				}else{
+				 $flag = 0;
+				goto LEVEL;
+				}
+			 	$flag = 1;
+				
+			}else{
+			$flag = 0;
+			}
+	}
+LEVEL:
+	if( $flag ){
+		print "$_" ;
+	}
+}
+
+close(FH);
