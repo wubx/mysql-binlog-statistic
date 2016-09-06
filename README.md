@@ -95,3 +95,46 @@ mysqlbinlog
 支持flashback功能
 
     ./mysqlbinlog -B |mysql
+
+# pasrebinlog_stat.py
+
+
+###### 1. 安装需要的 Python 模块
+
+```
+pip install xlwt
+pip install pandas
+```
+
+###### 2. 创建使用 pasrebinlog 解析后生成文件的存放位置
+注意: 每一个binlog生成一个统计文件
+
+```
+mkdir -p /tmp/binlog_parse
+```
+
+###### 3. pasrebinlog 使用 pasrebinlog 生成统计文件保存到 /tmp/binlog_parse 目录中
+
+```
+ll /u01/other/backup/app_db/binlog/ | \
+    awk '{print "/home/manager/script/mysql-binlog-statistic/bin/pasrebinlog /u01/other/backup/app_db/binlog/" $9 "> /tmp/binlog_parse/" $9 ".log"}' | \
+    /bin/bash
+
+```
+
+###### 4. 使用 pasrebinlog_stat.py 生成相关
+
+```
+python pasrebinlog_stat.py /tmp/binlog_parse > format.txt
+```
+
+###### 5.查看生成的文件
+
+```
+ll
+-rw-rw-r-- 1 manager manager  58191 Sep  6 17:18 format.txt
+-rw-rw-r-- 1 manager manager 100352 Sep  6 17:18 sort_by_delete.xls
+-rw-rw-r-- 1 manager manager 100352 Sep  6 17:18 sort_by_insert.xls
+-rw-rw-r-- 1 manager manager 100352 Sep  6 17:18 sort_by_total.xls
+-rw-rw-r-- 1 manager manager 100352 Sep  6 17:18 sort_by_update.xls
+```
