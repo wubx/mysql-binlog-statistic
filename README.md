@@ -116,10 +116,9 @@ mkdir -p /tmp/binlog_parse
 ###### 3. pasrebinlog 使用 pasrebinlog 生成统计文件保存到 /tmp/binlog_parse 目录中
 
 ```
-ll /u01/other/backup/app_db/binlog/ | \
-    awk '{print "/home/manager/script/mysql-binlog-statistic/bin/pasrebinlog /u01/other/backup/app_db/binlog/" $9 "> /tmp/binlog_parse/" $9 ".log"}' | \
+ll /u01/other/backup/app_db/binlog/mysql-bin.00193* | \
+    awk -F ' |/' '{print "/home/manager/script/mysql-binlog-statistic/bin/pasrebinlog /u01/other/backup/app_db/binlog/" $NF " > /tmp/binlog_parse/" $NF ".log"}' | \
     /bin/bash
-
 ```
 
 ###### 4. 使用 pasrebinlog_stat.py 生成相关
